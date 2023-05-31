@@ -25,10 +25,10 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const sortedData = (dat) =>
-      dat.sort((a, b) => parseDate(a.date) - parseDate(b.date));
-
-    const parseDate = (e) => new Date(e);
+    const parseDate = (e, d) => {
+        
+      return new Date(e);
+    };
 
     const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
     const barWidth = 50;
@@ -36,34 +36,33 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     data.map((element, index) => {
       const bars = svg
         .selectAll(".timeline-bar" + index)
-        .data(() => sortedData(element.operations))
+        .data(() => element.operations)
         .enter()
         .append("g")
         .attr("class", "timeline-bar" + index)
-        .attr("transform", (d, i) => `translate(0, ${y(parseDate(d.date))})`)
+        .attr(
+          "transform",
+          (d, i) => `translate(0, ${y(parseDate(d.startTime))})`
+        )
         .on("mouseover", function (event, d) {
-          d3.select(this).select("rect").attr("fill", "yellow");
+          d3.select(this).select("rect").attr("opacity", 1);
           console.log(d);
         })
         .on("mouseout", function (event, d) {
-          d3.select(this).select("rect").attr("fill", "#87BC45");
+          d3.select(this).select("rect").attr("opacity", 0.6);
         });
 
       bars
         .append("rect")
-        .attr("x", (index * (width-100)) / data.length)
+        .attr("x", (index * (width - 100)) / data.length)
         .attr("y", -barWidth / 2)
         .attr("width", (width - 100) / data.length)
-        .attr("height", (d, i) => {
-          if (i < sortedData(element.operations).length - 1) {
-            const nextDate = new Date(
-              parseDate(sortedData(element.operations)[i + 1].date) - 1
-            ); // Изменение шага времени на 1 час
-            return y(nextDate) - y(parseDate(d.date));
-          }
-          return barWidth;
-        })
-        .attr("fill", "#87BC45");
+        .attr(
+          "height",
+          (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
+        )
+        .attr("fill", "#87BC45")
+        .attr("opacity", "0.6");
     });
 
     const timeFormat = d3.timeFormat("%d.%m, %H:%M");
@@ -95,7 +94,9 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           style={{
             position: "absolute",
             top: "10px",
-            left: `${(timelineRef.current.clientWidth - 100) / data.length * index}px`,
+            left: `${
+              ((timelineRef.current.clientWidth - 100) / data.length) * index
+            }px`,
           }}
         >
           <span>{element.OperationName}</span>
