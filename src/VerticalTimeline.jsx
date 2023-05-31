@@ -36,8 +36,13 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .append("g")
       .attr("class", "timeline-bar")
       .attr("transform", (d, i) => `translate(0, ${y(parseDate(d.date))})`)
-      .on("mouseover", (d) => console.log(d)); // Обработчик события наведения мыши на блок
-
+      .on('mouseover', function(event, d) {
+        d3.select(this).select('rect').attr('fill', 'yellow'); // Выделение блока желтым цветом при наведении
+        console.log(d); // Вывод информации о блоке при наведении на него
+      })
+      .on('mouseout', function(event, d) {
+        d3.select(this).select('rect').attr('fill', "#87BC45"); // Восстановление цвета блока при уходе мыши
+      });
     bars
       .append("rect")
       .attr("x", 0)
@@ -50,16 +55,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
         }
         return barWidth;
       })
-      .attr("fill", (d, i) => `rgb(${i * 25}, 0, 0)`); // Измените цвет в соответствии с вашими требованиями
-
-    bars
-      .append("line")
-      .attr("x1", 0)
-      .attr("y1", -barWidth / 2)
-      .attr("x2", width)
-      .attr("y2", -barWidth / 2)
-      .attr("stroke", "gray")
-      .attr("stroke-dasharray", "2 2");
+      .attr("fill", "#87BC45"); // Измените цвет в соответствии с вашими требованиями
 
     const timeFormat = d3.timeFormat("%H:%M");
 
@@ -72,7 +68,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     };
   }, [data, minDate, maxDate]);
 
-  return <div ref={timelineRef} style={{ width: "100%", height: "500px" }} />;
+  return <div ref={timelineRef} style={{ width: "100%", height: "3000px" }} />;
 };
 
 export default VerticalTimeline;
