@@ -51,13 +51,14 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
 
       bars
         .append("rect")
-        .attr("x", index * 200)
+        .attr("x", (index * (width-100)) / data.length)
         .attr("y", -barWidth / 2)
-        .attr("width", 90)
+        .attr("width", (width - 100) / data.length)
         .attr("height", (d, i) => {
           if (i < sortedData(element.operations).length - 1) {
-            const nextDate = new Date(parseDate(sortedData(element.operations)[i + 1].date) - 1); // Изменение шага времени на 1 час
-            console.log(nextDate);
+            const nextDate = new Date(
+              parseDate(sortedData(element.operations)[i + 1].date) - 1
+            ); // Изменение шага времени на 1 час
             return y(nextDate) - y(parseDate(d.date));
           }
           return barWidth;
@@ -94,7 +95,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           style={{
             position: "absolute",
             top: "10px",
-            left: `${index * 200}px`,
+            left: `${(timelineRef.current.clientWidth - 100) / data.length * index}px`,
           }}
         >
           <span>{element.OperationName}</span>

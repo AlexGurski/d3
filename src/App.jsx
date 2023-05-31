@@ -142,13 +142,37 @@ const data = [
       },
     ],
   },
+  {
+    OperationID: 12,
+    OperationName: "Okuwabnnwiodwei",
+    operations: [
+      {
+        indeks: 12,
+        zlecenieID: 128123619,
+        zlecenie: "G213wqw23",
+        date: "2023-05-27 03:07:22.497",
+      },
+      {
+        indeks: 21,
+        zlecenieID: 122,
+        zlecenie: "G21323",
+        date: "2023-05-27 17:09:45.290",
+      },
+      {
+        indeks: 21,
+        zlecenieID: 122,
+        zlecenie: "G21323",
+        date: "2023-05-27 22:09:45.290",
+      },
+    ],
+  },
 ];
 export const App = () => {
   return (
     <>
       <VerticalTimeline
         data={data}
-        minDate={new Date("2023-05-24T00:00:00.000Z")}
+        minDate={new Date("2023-05-27T00:00:00.000Z")}
         maxDate={new Date("2023-05-30T23:59:59.000Z")}
       />
     </>
