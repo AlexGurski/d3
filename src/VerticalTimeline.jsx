@@ -5,7 +5,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
   const timelineRef = useRef(null);
 
   useEffect(() => {
-    const margin = { top: 50, right: 30, bottom: 30, left: 60 };
+    const margin = { top: 50, right: 30, bottom: 30, left: 100 };
     const height =
       timelineRef.current.clientHeight - margin.top - margin.bottom;
     const width = 200;
@@ -25,9 +25,8 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     );
 
     const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
-
-    const barWidth = 50; // Ширина столбца (измените по вашему усмотрению)
-    const barPadding = 10; // Расстояние между блоками
+    const barWidth = 50;
+    const barPadding = 10;
 
     const bars = svg
       .selectAll(".timeline-bar")
@@ -36,13 +35,14 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .append("g")
       .attr("class", "timeline-bar")
       .attr("transform", (d, i) => `translate(0, ${y(parseDate(d.date))})`)
-      .on('mouseover', function(event, d) {
-        d3.select(this).select('rect').attr('fill', 'yellow'); // Выделение блока желтым цветом при наведении
-        console.log(d); // Вывод информации о блоке при наведении на него
+      .on("mouseover", function (event, d) {
+        d3.select(this).select("rect").attr("fill", "yellow");
+        console.log(d);
       })
-      .on('mouseout', function(event, d) {
-        d3.select(this).select('rect').attr('fill', "#87BC45"); // Восстановление цвета блока при уходе мыши
+      .on("mouseout", function (event, d) {
+        d3.select(this).select("rect").attr("fill", "#87BC45");
       });
+
     bars
       .append("rect")
       .attr("x", 0)
@@ -50,16 +50,18 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .attr("width", width)
       .attr("height", (d, i) => {
         if (i < sortedData.length - 1) {
-          const nextDate = parseDate(sortedData[i + 1].date);
+          const nextDate = new Date(parseDate(sortedData[i + 1].date) - 1); // Изменение шага времени на 1 час
           return y(nextDate) - y(parseDate(d.date));
         }
         return barWidth;
       })
-      .attr("fill", "#87BC45"); // Измените цвет в соответствии с вашими требованиями
+      .attr("fill", "#87BC45");
 
-    const timeFormat = d3.timeFormat("%H:%M");
-
-    const yAxis = d3.axisLeft(y).tickFormat(timeFormat);
+    const timeFormat = d3.timeFormat("%d.%m, %H:%M");
+    const yAxis = d3
+      .axisLeft(y)
+      .ticks(d3.timeHour.every(2))
+      .tickFormat(timeFormat);
 
     svg.append("g").attr("class", "y-axis").call(yAxis);
 

@@ -98,7 +98,6 @@ const data = [
     },
   },
 ];
-console.log(data);
 export const App = () => {
   return (
     <>
