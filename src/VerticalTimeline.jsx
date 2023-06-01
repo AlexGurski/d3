@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Gorilla from "./assets/gif/gorila.gif";
-
+import Arrow from "./assets/svg/arrow.svg";
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
   let hours = Math.round(minutes / 60);
@@ -12,9 +12,16 @@ function getDuration(milli) {
 const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   const timelineRef = useRef(null);
   const wrapperRef = useRef(null);
-
+  const [position, setPosition] = useState(0);
   const fieldWidth = 150;
 
+  const positionHandler = (e) => {
+    if (position + e > 0) {
+      setPosition(0);
+    } else {
+      setPosition(position + e);
+    }
+  };
   useEffect(() => {
     const margin = { top: 70, right: 0, bottom: 0, left: 0 };
     const height =
@@ -140,18 +147,33 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       <div className="wrapper">
         {data.length === 0 && (
           <div className="gorilla">
-            <img src={Gorilla} alt="" width={150} height={150} />
+            <img src={Gorilla} alt="" width={120} height={120} />
           </div>
-          
         )}
-
+        <img
+          src={Arrow}
+          alt=""
+          width={20}
+          height={20}
+          className="prev"
+          onClick={() => positionHandler(fieldWidth)}
+        />
+        <img
+          src={Arrow}
+          alt=""
+          width={20}
+          height={20}
+          className="next"
+          onClick={() => positionHandler(-fieldWidth)}
+        />
         <div
           ref={timelineRef}
           style={{
             width: `${data.length * fieldWidth}px`,
             height: `${getDuration(maxDate - minDate)}px`,
+            transform: `translateX(${position}px)`,
           }}
-        />
+        ></div>
 
         {data.map((element, index) => (
           <div
@@ -162,6 +184,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
               top: "10px",
               left: `${fieldWidth * index}px`,
               width: `${fieldWidth}px`,
+              transform: `translateX(${position}px)`,
             }}
           >
             <span className="title_text">{element.operationName}</span>
