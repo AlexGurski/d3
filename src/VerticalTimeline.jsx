@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Gorilla from "./assets/gif/gorila.gif";
 import Arrow from "./assets/svg/arrow.svg";
+
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
   let hours = Math.round(minutes / 60);
@@ -22,8 +23,28 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       setPosition(position + e);
     }
   };
+
+  const clickHandler = (e, event) => {
+    fetch("https://5scontrol.pl/proxy_to_ngrok/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/order-detail/?operation="+e.id,
+        method: "GET",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+       console.log(data);
+      });
+    console.log(e, event);
+  }
+
   useEffect(() => {
-    const margin = { top: 70, right: 0, bottom: 0, left: 0 };
+    const margin = { top: 40, right: 0, bottom: 0, left: 0 };
     const height =
       timelineRef.current.clientHeight - margin.top - margin.bottom;
     const width = timelineRef.current.clientWidth;
@@ -64,7 +85,10 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         )
         .on("mouseover", function (event, d) {
           d3.select(this).select("rect").attr("opacity", 1);
-          console.log(d);
+        })
+        .on("click", function (event, d) {
+          d3.select(this).select("rect").attr("opacity", 1);
+          clickHandler(d, event);
         })
         .on("mouseout", function (event, d) {
           d3.select(this)
