@@ -53,128 +53,129 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   useEffect(() => {
-    const margin = { top: 40, right: 0, bottom: 0, left: 0 };
-    const height =
-      timelineRef.current.clientHeight - margin.top - margin.bottom;
-    const width = timelineRef.current.clientWidth;
+    if (timelineRef) {
+      const margin = { top: 40, right: 0, bottom: 0, left: 0 };
+      const height =
+        timelineRef.current.clientHeight - margin.top - margin.bottom;
+      const width = timelineRef.current.clientWidth;
 
-    const svg = d3
-      .select(timelineRef.current)
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const svgTime = d3
-      .select(wrapperRef.current)
-      .append("svg")
-      .attr("width", 100)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const parseDate = (e, d) => {
-      // console.log(new Date(e), d);
-      return new Date(e);
-    };
-
-    const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
-
-    data.forEach((element, index) => {
-      const bars = svg
-        .selectAll(".timeline-bar" + index)
-        .data(() => element.operations)
-        .enter()
+      const svg = d3
+        .select(timelineRef.current)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("class", "timeline-bar" + index)
-        .attr(
-          "transform",
-          (d, i) => `translate(0, ${y(parseDate(d.startTime))})`
-        )
-        .on("mouseover", function (event, d) {
-          d3.select(this).select("rect").attr("opacity", 1);
-        })
-        .on("click", function (event, d) {
-          d3.select(this).select("rect").attr("opacity", 1);
-          clickHandler(d, event);
-        })
-        .on("mouseout", function (event, d) {
-          d3.select(this)
-            .select("rect")
-            .attr("opacity", d.orderName === selectOrder ? 1 : 0.6);
-        });
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      bars
-        .append("rect")
-        .attr("x", index * fieldWidth + 35)
-        .attr("y", 0)
-        .attr("width", fieldWidth - 70)
-        .attr(
-          "height",
-          (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
-        )
-        .attr("fill", "#87BC45")
-        .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6));
-    });
-
-    // Добавление серых блоков для заполнения разницы
-    data.forEach((element, index) => {
-      const greyBars = svg
-        .selectAll(".grey-bar" + index)
-        .data(() => element.operations)
-        .enter()
+      const svgTime = d3
+        .select(wrapperRef.current)
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("class", "grey-bar" + index);
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      greyBars
-        .append("rect")
-        .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
-        .attr("y", 0)
-        .attr("width", 1)
-        .attr("height", height)
-        .attr("fill", "#C7C7C7");
+      const parseDate = (e, d) => {
+        // console.log(new Date(e), d);
+        return new Date(e);
+      };
 
-      greyBars
-        .append("rect")
-        .attr("x", index * fieldWidth + 35)
-        .attr("y", 0)
-        .attr("width", fieldWidth - 70)
-        .attr(
-          "transform",
-          (d, i) => `translate(0, ${i === 0 ? "0" : y(parseDate(d.endTime))})`
-        )
-        .attr("height", (d, i) => {
-          if (i === 0) {
-            return y(parseDate(d.startTime)) - y(minDate);
-          }
-          if (i < element.operations.length - 1) {
-            const nextDate = parseDate(element.operations[i + 1].startTime);
-            return y(nextDate) - y(parseDate(d.endTime)) > 0
-              ? y(nextDate) - y(parseDate(d.endTime))
-              : 1;
-          }
-          return y(maxDate) - y(parseDate(d.endTime));
-        })
-        .on("click", () => setOperation(false))
-        .attr("fill", "#CCCCCC");
-    });
+      const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
 
-    const timeFormat = d3.timeFormat("%d.%m, %H:%M");
+      data.forEach((element, index) => {
+        const bars = svg
+          .selectAll(".timeline-bar" + index)
+          .data(() => element.operations)
+          .enter()
+          .append("g")
+          .attr("class", "timeline-bar" + index)
+          .attr(
+            "transform",
+            (d, i) => `translate(0, ${y(parseDate(d.startTime))})`
+          )
+          .on("mouseover", function (event, d) {
+            d3.select(this).select("rect").attr("opacity", 1);
+          })
+          .on("click", function (event, d) {
+            d3.select(this).select("rect").attr("opacity", 1);
+            clickHandler(d, event);
+          })
+          .on("mouseout", function (event, d) {
+            d3.select(this)
+              .select("rect")
+              .attr("opacity", d.orderName === selectOrder ? 1 : 0.6);
+          });
 
-    const yAxis = d3
-      .axisRight(y)
-      .ticks(d3.timeHour.every(2))
-      .tickFormat(timeFormat);
+        bars
+          .append("rect")
+          .attr("x", index * fieldWidth + 35)
+          .attr("y", 0)
+          .attr("width", fieldWidth - 70)
+          .attr(
+            "height",
+            (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
+          )
+          .attr("fill", "#87BC45")
+          .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6));
+      });
 
-    svgTime.append("g").attr("class", "y-axis").call(yAxis);
-    d3.select(wrapperRef.current).call(yAxis);
+      // Добавление серых блоков для заполнения разницы
+      data.forEach((element, index) => {
+        const greyBars = svg
+          .selectAll(".grey-bar" + index)
+          .data(() => element.operations)
+          .enter()
+          .append("g")
+          .attr("class", "grey-bar" + index);
 
+        greyBars
+          .append("rect")
+          .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
+          .attr("y", 0)
+          .attr("width", 1)
+          .attr("height", height)
+          .attr("fill", "#C7C7C7");
+
+        greyBars
+          .append("rect")
+          .attr("x", index * fieldWidth + 35)
+          .attr("y", 0)
+          .attr("width", fieldWidth - 70)
+          .attr(
+            "transform",
+            (d, i) => `translate(0, ${i === 0 ? "0" : y(parseDate(d.endTime))})`
+          )
+          .attr("height", (d, i) => {
+            if (i === 0) {
+              return y(parseDate(d.startTime)) - y(minDate);
+            }
+            if (i < element.operations.length - 1) {
+              const nextDate = parseDate(element.operations[i + 1].startTime);
+              return y(nextDate) - y(parseDate(d.endTime)) > 0
+                ? y(nextDate) - y(parseDate(d.endTime))
+                : 1;
+            }
+            return y(maxDate) - y(parseDate(d.endTime));
+          })
+          .on("click", () => setOperation(false))
+          .attr("fill", "#CCCCCC");
+      });
+
+      const timeFormat = d3.timeFormat("%d.%m, %H:%M");
+
+      const yAxis = d3
+        .axisRight(y)
+        .ticks(d3.timeHour.every(2))
+        .tickFormat(timeFormat);
+
+      svgTime.append("g").attr("class", "y-axis").call(yAxis);
+      d3.select(wrapperRef.current).call(yAxis);
+    }
     return () => {
       d3.select(timelineRef.current).selectAll("*").remove();
       d3.select(wrapperRef.current).selectAll("*").remove();
     };
-  }, [data, minDate, maxDate, selectOrder]);
+  }, [data, minDate, maxDate, selectOrder, timelineRef]);
 
   return (
     <div className="container">
