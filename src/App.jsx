@@ -16,7 +16,7 @@ export const App = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=2023-02-27&to=2023-03-07",
+        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=2023-02-27&to=2023-03-01",
         method: "GET",
       }),
     })
@@ -36,7 +36,7 @@ export const App = () => {
       <VerticalTimeline
         data={data}
         minDate={new Date("2023-02-27T00:00:00.000Z")}
-        maxDate={new Date("2023-03-07T23:59:59.000Z")}
+        maxDate={new Date("2023-03-01T23:59:59.000Z")}
         selectOrder={selectOrder}
       />
     </div>

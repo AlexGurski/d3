@@ -27,7 +27,7 @@ export const OrdersList = ({ setSelectOrder, selectOrder }) => {
   }, []);
   return (
     <div className="orders">
-      <h2>Orders</h2>
+      <h2>Orders ({data.length})</h2>
       <div className="orders__list">
         {data.map((item, index) => (
           <span
