@@ -12,6 +12,8 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
   const timelineRef = useRef(null);
   const wrapperRef = useRef(null);
 
+  const fieldWidth = 150;
+
   useEffect(() => {
     const margin = { top: 70, right: 0, bottom: 0, left: 0 };
     const height =
@@ -32,7 +34,6 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     };
 
     const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
-    const barWidth = 50;
 
     data.forEach((element, index) => {
       const bars = svg
@@ -53,11 +54,12 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           d3.select(this).select("rect").attr("opacity", 0.6);
         });
 
+
       bars
         .append("rect")
-        .attr("x", index * 100)
+        .attr("x", index * fieldWidth + 35)
         .attr("y",0)
-        .attr("width", 100)
+        .attr("width", fieldWidth - 70)
         .attr(
           "height",
           (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
@@ -67,7 +69,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     });
 
     // Добавление серых блоков для заполнения разницы
-    data.map((element, index) => {
+    data.forEach((element, index) => {
       const greyBars = svg
         .selectAll(".grey-bar" + index)
         .data(() => element.operations)
@@ -75,11 +77,21 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
         .append("g")
         .attr("class", "grey-bar" + index);
 
+        greyBars
+        .append("rect")
+        .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
+        .attr("y", 0)
+        .attr("width", 1)
+        .attr(
+          "height", height
+        )
+        .attr("fill", "#C7C7C7");
+
       greyBars
         .append("rect")
-        .attr("x", index * 100)
+        .attr("x", index * fieldWidth + 35)
         .attr("y", 0)
-        .attr("width", 80)
+        .attr("width", fieldWidth - 70)
         .attr(
           "transform",
           (d, i) => `translate(0, ${i === 0 ? "0" : y(parseDate(d.endTime))})`
@@ -111,7 +123,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .attr("class", "y-axis")
       .attr(
         "transform",
-        `translate(${wrapperRef.current.clientWidth - 100}, 0)`
+        `translate(${wrapperRef.current.clientWidth - fieldWidth}, 0)`
       )
       .call(yAxis);
 
@@ -125,17 +137,19 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       <div
         ref={timelineRef}
         style={{
-          width: `${data.length * 100}px`,
+          width: `${data.length * fieldWidth}px`,
           height: `${getDuration(maxDate - minDate)}px`,
         }}
       />
         {data.map((element, index) => (
         <div
           key={index}
+          className="text"
           style={{
             position: "absolute",
             top: "10px",
-            left: `${100 * index}px`,
+            left: `${fieldWidth * index}px`,
+            width: `${fieldWidth}px`
           }}
         >
           <span className="title_text">{element.operationName}</span>
