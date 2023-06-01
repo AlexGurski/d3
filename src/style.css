@@ -4,5 +4,15 @@
     padding: 0;
 }
 #root{
-    height: 100vh;
+    width: 700px;
+    height: 700px;
 }
+.wrapper{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+.title_text{
+    overflow: hidden;
+}
+

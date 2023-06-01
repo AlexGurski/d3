@@ -10,6 +10,7 @@ function getDuration(milli) {
 
 const VerticalTimeline = ({ data, minDate, maxDate }) => {
   const timelineRef = useRef(null);
+  const wrapperRef = useRef(null);
 
   useEffect(() => {
     const margin = { top: 50, right: 30, bottom: 30, left: 0 };
@@ -26,6 +27,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const parseDate = (e, d) => {
+      // console.log(new Date(e), d);
       return new Date(e);
     };
 
@@ -48,14 +50,14 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           console.log(d);
         })
         .on("mouseout", function (event, d) {
-          d3.select(this).select("rect").attr("opacity", 0.4);
+          d3.select(this).select("rect").attr("opacity", 0.6);
         });
 
       bars
         .append("rect")
-        .attr("x", (index * (width - 100)) / data.length)
+        .attr("x", index * 100)
         .attr("y", -barWidth / 2)
-        .attr("width", (width - 100) / data.length)
+        .attr("width", 100)
         .attr(
           "height",
           (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
@@ -73,7 +75,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     svg
       .append("g")
       .attr("class", "y-axis")
-      .attr("transform", `translate(${width - 100}, 0)`)
+      .attr("transform", `translate(${wrapperRef.current.clientWidth - 100}, 0)`)
       .call(yAxis);
 
     return () => {
@@ -82,26 +84,28 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
   }, [data, minDate, maxDate]);
 
   return (
-    <>
+    <div className="wrapper" ref={wrapperRef}>
       <div
         ref={timelineRef}
-        style={{ width: "100%", height: `${getDuration(maxDate - minDate)}px` }}
+        style={{
+          width: `${data.length * 100}px`,
+          height: `${getDuration(maxDate - minDate)}px`,
+        }}
       />
+      
       {data.map((element, index) => (
         <div
           key={index}
           style={{
             position: "absolute",
             top: "10px",
-            left: `${
-              ((timelineRef.current.clientWidth - 100) / data.length) * index
-            }px`,
+            left: `${100 * index}px`,
           }}
         >
-          <span>{element.OperationName}</span>
+          <span className="title_text">{element.operationName}</span>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
