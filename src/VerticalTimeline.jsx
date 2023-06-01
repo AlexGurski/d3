@@ -28,6 +28,14 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    const svgTime = d3
+      .select(wrapperRef.current)
+      .append("svg")
+      .attr("width", 100)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
     const parseDate = (e, d) => {
       // console.log(new Date(e), d);
       return new Date(e);
@@ -54,11 +62,10 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           d3.select(this).select("rect").attr("opacity", 0.6);
         });
 
-
       bars
         .append("rect")
         .attr("x", index * fieldWidth + 35)
-        .attr("y",0)
+        .attr("y", 0)
         .attr("width", fieldWidth - 70)
         .attr(
           "height",
@@ -77,14 +84,12 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
         .append("g")
         .attr("class", "grey-bar" + index);
 
-        greyBars
+      greyBars
         .append("rect")
         .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
         .attr("y", 0)
         .attr("width", 1)
-        .attr(
-          "height", height
-        )
+        .attr("height", height)
         .attr("fill", "#C7C7C7");
 
       greyBars
@@ -101,7 +106,6 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
             return y(parseDate(d.startTime)) - y(minDate);
           }
           if (i < element.operations.length - 1) {
-            console.log(element);
             const nextDate = parseDate(element.operations[i + 1].startTime);
             return y(nextDate) - y(parseDate(d.endTime)) > 0
               ? y(nextDate) - y(parseDate(d.endTime))
@@ -113,48 +117,48 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     });
 
     const timeFormat = d3.timeFormat("%d.%m, %H:%M");
+
     const yAxis = d3
       .axisRight(y)
       .ticks(d3.timeHour.every(2))
       .tickFormat(timeFormat);
 
-    svg
-      .append("g")
-      .attr("class", "y-axis")
-      .attr(
-        "transform",
-        `translate(${wrapperRef.current.clientWidth - fieldWidth}, 0)`
-      )
-      .call(yAxis);
+    svgTime.append("g").attr("class", "y-axis").call(yAxis);
+    d3.select(wrapperRef.current).call(yAxis);
 
     return () => {
       d3.select(timelineRef.current).selectAll("*").remove();
+      d3.select(wrapperRef.current).selectAll("*").remove();
     };
   }, [data, minDate, maxDate]);
 
   return (
-    <div className="wrapper" ref={wrapperRef}>
-      <div
-        ref={timelineRef}
-        style={{
-          width: `${data.length * fieldWidth}px`,
-          height: `${getDuration(maxDate - minDate)}px`,
-        }}
-      />
-        {data.map((element, index) => (
+    <div className="container">
+      <div className="wrapper">
         <div
-          key={index}
-          className="text"
+          ref={timelineRef}
           style={{
-            position: "absolute",
-            top: "10px",
-            left: `${fieldWidth * index}px`,
-            width: `${fieldWidth}px`
+            width: `${data.length * fieldWidth}px`,
+            height: `${getDuration(maxDate - minDate)}px`,
           }}
-        >
-          <span className="title_text">{element.operationName}</span>
-        </div>
-      ))}
+        />
+        {data.map((element, index) => (
+          <div
+            key={index}
+            className="text"
+            style={{
+              position: "absolute",
+              top: "10px",
+              left: `${fieldWidth * index}px`,
+              width: `${fieldWidth}px`,
+            }}
+          >
+            <span className="title_text">{element.operationName}</span>
+          </div>
+        ))}
+          
+      </div>
+      <div className="datetime" ref={wrapperRef}></div>
     </div>
   );
 };
