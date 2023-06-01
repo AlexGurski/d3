@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Gorilla from "./assets/gif/gorila.gif";
 import Arrow from "./assets/svg/arrow.svg";
+import { Operation } from "./operation";
 
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
@@ -14,6 +15,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   const timelineRef = useRef(null);
   const wrapperRef = useRef(null);
   const [position, setPosition] = useState(0);
+  const [operation, setOperation] = useState(false);
   const fieldWidth = 150;
 
   const positionHandler = (e) => {
@@ -32,16 +34,23 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/order-detail/?operation="+e.id,
+        url:
+          "https://743e-134-17-26-206.ngrok-free.app/api/new-order/order-detail/?operation=" +
+          e.id,
         method: "GET",
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-       console.log(data);
+        console.log(data);
+        setOperation({
+          data: data,
+          x: event.pageX,
+          y: event.pageY,
+        });
       });
     console.log(e, event);
-  }
+  };
 
   useEffect(() => {
     const margin = { top: 40, right: 0, bottom: 0, left: 0 };
@@ -147,6 +156,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           }
           return y(maxDate) - y(parseDate(d.endTime));
         })
+        .on("click", () => setOperation(false))
         .attr("fill", "#CCCCCC");
     });
 
@@ -216,6 +226,13 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         ))}
       </div>
       <div className="datetime" ref={wrapperRef}></div>
+      {operation && (
+        <Operation
+          operation={operation.data}
+          x={`${operation.x}px`}
+          y={`${operation.y}px`}
+        />
+      )}
     </div>
   );
 };
