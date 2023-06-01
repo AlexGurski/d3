@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import Gorilla from "./assets/gif/gorila.gif";
 
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
@@ -8,7 +9,7 @@ function getDuration(milli) {
   return days * 400;
 }
 
-const VerticalTimeline = ({ data, minDate, maxDate }) => {
+const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   const timelineRef = useRef(null);
   const wrapperRef = useRef(null);
 
@@ -59,7 +60,9 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           console.log(d);
         })
         .on("mouseout", function (event, d) {
-          d3.select(this).select("rect").attr("opacity", 0.6);
+          d3.select(this)
+            .select("rect")
+            .attr("opacity", d.orderName === selectOrder ? 1 : 0.6);
         });
 
       bars
@@ -72,7 +75,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
         )
         .attr("fill", "#87BC45")
-        .attr("opacity", "0.6");
+        .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6));
     });
 
     // Добавление серых блоков для заполнения разницы
@@ -130,11 +133,18 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       d3.select(timelineRef.current).selectAll("*").remove();
       d3.select(wrapperRef.current).selectAll("*").remove();
     };
-  }, [data, minDate, maxDate]);
+  }, [data, minDate, maxDate, selectOrder]);
 
   return (
     <div className="container">
       <div className="wrapper">
+        {data.length === 0 && (
+          <div className="gorilla">
+            <img src={Gorilla} alt="" width={150} height={150} />
+          </div>
+          
+        )}
+
         <div
           ref={timelineRef}
           style={{
@@ -142,6 +152,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
             height: `${getDuration(maxDate - minDate)}px`,
           }}
         />
+
         {data.map((element, index) => (
           <div
             key={index}
@@ -156,7 +167,6 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
             <span className="title_text">{element.operationName}</span>
           </div>
         ))}
-          
       </div>
       <div className="datetime" ref={wrapperRef}></div>
     </div>
