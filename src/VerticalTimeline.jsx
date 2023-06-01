@@ -13,7 +13,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
   const wrapperRef = useRef(null);
 
   useEffect(() => {
-    const margin = { top: 50, right: 30, bottom: 30, left: 0 };
+    const margin = { top: 70, right: 0, bottom: 0, left: 0 };
     const height =
       timelineRef.current.clientHeight - margin.top - margin.bottom;
     const width = timelineRef.current.clientWidth;
@@ -34,7 +34,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
     const barWidth = 50;
 
-    data.map((element, index) => {
+    data.forEach((element, index) => {
       const bars = svg
         .selectAll(".timeline-bar" + index)
         .data(() => element.operations)
@@ -56,7 +56,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       bars
         .append("rect")
         .attr("x", index * 100)
-        .attr("y", -barWidth / 2)
+        .attr("y",0)
         .attr("width", 100)
         .attr(
           "height",
@@ -64,6 +64,40 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
         )
         .attr("fill", "#87BC45")
         .attr("opacity", "0.6");
+    });
+
+    // Добавление серых блоков для заполнения разницы
+    data.map((element, index) => {
+      const greyBars = svg
+        .selectAll(".grey-bar" + index)
+        .data(() => element.operations)
+        .enter()
+        .append("g")
+        .attr("class", "grey-bar" + index);
+
+      greyBars
+        .append("rect")
+        .attr("x", index * 100)
+        .attr("y", 0)
+        .attr("width", 80)
+        .attr(
+          "transform",
+          (d, i) => `translate(0, ${i === 0 ? "0" : y(parseDate(d.endTime))})`
+        )
+        .attr("height", (d, i) => {
+          if (i === 0) {
+            return y(parseDate(d.startTime)) - y(minDate);
+          }
+          if (i < element.operations.length - 1) {
+            console.log(element);
+            const nextDate = parseDate(element.operations[i + 1].startTime);
+            return y(nextDate) - y(parseDate(d.endTime)) > 0
+              ? y(nextDate) - y(parseDate(d.endTime))
+              : 1;
+          }
+          return y(maxDate) - y(parseDate(d.endTime));
+        })
+        .attr("fill", "#CCCCCC");
     });
 
     const timeFormat = d3.timeFormat("%d.%m, %H:%M");
@@ -75,7 +109,10 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
     svg
       .append("g")
       .attr("class", "y-axis")
-      .attr("transform", `translate(${wrapperRef.current.clientWidth - 100}, 0)`)
+      .attr(
+        "transform",
+        `translate(${wrapperRef.current.clientWidth - 100}, 0)`
+      )
       .call(yAxis);
 
     return () => {
@@ -92,8 +129,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           height: `${getDuration(maxDate - minDate)}px`,
         }}
       />
-      
-      {data.map((element, index) => (
+        {data.map((element, index) => (
         <div
           key={index}
           style={{
