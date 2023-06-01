@@ -26,7 +26,6 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const parseDate = (e, d) => {
-        
       return new Date(e);
     };
 
@@ -49,7 +48,7 @@ const VerticalTimeline = ({ data, minDate, maxDate }) => {
           console.log(d);
         })
         .on("mouseout", function (event, d) {
-          d3.select(this).select("rect").attr("opacity", 0.6);
+          d3.select(this).select("rect").attr("opacity", 0.4);
         });
 
       bars

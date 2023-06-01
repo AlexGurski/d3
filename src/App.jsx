@@ -4,9 +4,20 @@ import VerticalTimeline from "./VerticalTimeline";
 export const App = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch(
-      "http://192.168.1.110/api/new-order/zlecenie/?from=2023-01-25&to=2024-05-27"
-    )
+    // fetch(
+    //   "http://192.168.1.110/api/new-order/operations/?from=2023-01-25&to=2024-05-27"
+    // )
+    fetch("https://5scontrol.pl/proxy_to_ngrok/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=2023-01-25&to=2024-05-27",
+        method: "GET",
+      }),
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
