@@ -7,7 +7,7 @@
 #root,
 body {
   width: 70vw;
-  height: 85vh;
+  height: calc(100vw - 200px);
   overflow: hidden;
   background-color: red;
 }
