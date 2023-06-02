@@ -17,7 +17,7 @@ export const OrdersList = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: `https://743e-134-17-26-206.ngrok-free.app/api/new-order/orders/?from=${startDate}&to=${endDate}`,
+        url: `https://0bc5-81-7-77-205.ngrok-free.app/api/new-order/orders/?from=${startDate}&to=${endDate}`,
         method: "GET",
       }),
     })

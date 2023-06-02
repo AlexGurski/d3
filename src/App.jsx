@@ -5,8 +5,8 @@ import { OrdersList } from "./ordersList";
 export const App = () => {
   const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
-  const startDate = '2023-02-27'
-  const endDate = '2023-03-01'
+  const startDate = '2023-05-27'
+  const endDate = '2023-05-30'
   useEffect(() => {
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
@@ -15,7 +15,7 @@ export const App = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: `https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=${startDate}&to=${endDate}`,
+        url: `https://0bc5-81-7-77-205.ngrok-free.app/api/new-order/operations/?from=${startDate}&to=${endDate}`,
         method: "GET",
       }),
     })

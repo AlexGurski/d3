@@ -49,7 +49,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       },
       body: JSON.stringify({
         url:
-          "https://743e-134-17-26-206.ngrok-free.app/api/new-order/order-detail/?operation=" +
+          "https://0bc5-81-7-77-205.ngrok-free.app/api/new-order/order-detail/?operation=" +
           e.id,
         method: "GET",
       }),
