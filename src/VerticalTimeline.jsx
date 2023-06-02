@@ -53,11 +53,11 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   useEffect(() => {
-    if (timelineRef && data.length > 0) {
+    if (timelineRef.current && data.length > 0) {
       const margin = { top: 40, right: 0, bottom: 0, left: 0 };
       const height =
         timelineRef.current.clientHeight - margin.top - margin.bottom;
-      const width = timelineRef.current.clientWidth;
+      const width = data.length * fieldWidth;
 
       const svg = d3
         .select(timelineRef.current)
@@ -175,7 +175,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       d3.select(timelineRef.current).selectAll("*").remove();
       d3.select(wrapperRef.current).selectAll("*").remove();
     };
-  }, [data, minDate, maxDate, selectOrder, timelineRef]);
+  }, [minDate, maxDate, selectOrder, timelineRef, data]);
 
   return (
     <div className="container">
