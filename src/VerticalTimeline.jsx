@@ -16,10 +16,10 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   useEffect(() => {
     if (data.length > 0) {
       const first = data.filter((order) =>
-        JSON.stringify(order.operations).includes(selectOrder)
+        JSON.stringify(order.operations).includes(`"${selectOrder}"`)
       );
       const end =   data.filter((order) =>
-      !JSON.stringify(order.operations).includes(selectOrder)
+      !JSON.stringify(order.operations).includes(`"${selectOrder}"`)
     )
       setUpdate([...first, ...end]);
     }
