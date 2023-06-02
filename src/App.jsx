@@ -5,10 +5,9 @@ import { OrdersList } from "./ordersList";
 export const App = () => {
   const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
+  const startDate = '2023-02-27'
+  const endDate = '2023-03-01'
   useEffect(() => {
-    // fetch(
-    //   "http://192.168.1.110/api/new-order/operations/?from=2023-01-25&to=2024-05-27"
-    // )
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -16,7 +15,7 @@ export const App = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=2023-02-27&to=2023-03-01",
+        url: `https://743e-134-17-26-206.ngrok-free.app/api/new-order/operations/?from=${startDate}&to=${endDate}`,
         method: "GET",
       }),
     })
@@ -32,11 +31,13 @@ export const App = () => {
       <OrdersList
         setSelectOrder={(order) => setSelectOrder(order)}
         selectOrder={selectOrder}
+        startDate={startDate}
+        endDate={endDate}
       />
       <VerticalTimeline
         data={data}
-        minDate={new Date("2023-02-27T00:00:00.000Z")}
-        maxDate={new Date("2023-03-01T23:59:59.000Z")}
+        minDate={new Date(`${startDate}T00:00:00.000Z`)}
+        maxDate={new Date(`${endDate}T23:59:59.000Z`)}
         selectOrder={selectOrder}
       />
     </div>

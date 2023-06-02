@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import "./style.css";
 
-export const OrdersList = ({ setSelectOrder, selectOrder }) => {
+export const OrdersList = ({
+  setSelectOrder,
+  selectOrder,
+  startDate,
+  endDate,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -12,7 +17,7 @@ export const OrdersList = ({ setSelectOrder, selectOrder }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: "https://743e-134-17-26-206.ngrok-free.app/api/new-order/orders/?from=2023-02-27&to=2023-03-01",
+        url: `https://743e-134-17-26-206.ngrok-free.app/api/new-order/orders/?from=${startDate}&to=${endDate}`,
         method: "GET",
       }),
     })
@@ -25,7 +30,8 @@ export const OrdersList = ({ setSelectOrder, selectOrder }) => {
         console.log(uniqueOrderNames);
         setData(uniqueOrderNames);
       });
-  }, []);
+  }, [startDate, endDate]);
+
   return (
     <div className="orders">
       <h2>Orders ({data.length})</h2>
