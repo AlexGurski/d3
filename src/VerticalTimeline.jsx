@@ -22,7 +22,11 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         (order) =>
           !JSON.stringify(order.operations).includes(`"${selectOrder}"`)
       );
-      setUpdate([...first, ...end]);
+      setUpdate(
+        data.filter((order) =>
+          JSON.stringify(order.operations).includes(`${selectOrder}`)
+        )
+      );
     }
   }, [data, selectOrder]);
 
