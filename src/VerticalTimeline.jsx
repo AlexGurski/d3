@@ -18,9 +18,10 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       const first = data.filter((order) =>
         JSON.stringify(order.operations).includes(`"${selectOrder}"`)
       );
-      const end =   data.filter((order) =>
-      !JSON.stringify(order.operations).includes(`"${selectOrder}"`)
-    )
+      const end = data.filter(
+        (order) =>
+          !JSON.stringify(order.operations).includes(`"${selectOrder}"`)
+      );
       setUpdate([...first, ...end]);
     }
   }, [data, selectOrder]);
@@ -228,12 +229,12 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             style={{
               position: "absolute",
               top: "10px",
-              left: `${fieldWidth * index}px`,
-              width: `${fieldWidth}px`,
+              left: `${fieldWidth * index + 30}px`,
+              width: `${fieldWidth - 60}px`,
               transform: `translateX(${position}px)`,
             }}
           >
-            <span className="title_text">{element.operationName}</span>
+            {element.operationName}
           </div>
         ))}
       </div>
