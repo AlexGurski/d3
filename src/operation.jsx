@@ -1,6 +1,5 @@
 import "./style.css";
 export const Operation = ({operation, x, y}) => {
-    console.log(operation)
   return (
     <div className="operation" style={{ top: y, left: x }}>
       <span className="name">{operation.operationName}</span>

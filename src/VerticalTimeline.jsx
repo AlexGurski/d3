@@ -12,6 +12,19 @@ function getDuration(milli) {
 }
 
 const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
+  const [update, setUpdate] = useState(data);
+  useEffect(() => {
+    if (data.length > 0) {
+      const first = data.filter((order) =>
+        JSON.stringify(order.operations).includes(selectOrder)
+      );
+      const end =   data.filter((order) =>
+      !JSON.stringify(order.operations).includes(selectOrder)
+    )
+      setUpdate([...first, ...end]);
+    }
+  }, [data, selectOrder]);
+
   const timelineRef = useRef(null);
   const wrapperRef = useRef(null);
   const [position, setPosition] = useState(0);
@@ -42,7 +55,6 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setOperation({
           data: data,
           x: event.pageX,
@@ -53,11 +65,11 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   useEffect(() => {
-    if (timelineRef.current && data.length > 0) {
+    if (timelineRef.current && update.length > 0) {
       const margin = { top: 40, right: 0, bottom: 0, left: 0 };
       const height =
         timelineRef.current.clientHeight - margin.top - margin.bottom;
-      const width = data.length * fieldWidth;
+      const width = update.length * fieldWidth;
 
       const svg = d3
         .select(timelineRef.current)
@@ -76,13 +88,12 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
       const parseDate = (e, d) => {
-        // console.log(new Date(e), d);
         return new Date(e);
       };
 
       const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
 
-      data.forEach((element, index) => {
+      update.forEach((element, index) => {
         const bars = svg
           .selectAll(".timeline-bar" + index)
           .data(() => element.operations)
@@ -120,7 +131,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       });
 
       // Добавление серых блоков для заполнения разницы
-      data.forEach((element, index) => {
+      update.forEach((element, index) => {
         const greyBars = svg
           .selectAll(".grey-bar" + index)
           .data(() => element.operations)
@@ -175,12 +186,12 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
       d3.select(timelineRef.current).selectAll("*").remove();
       d3.select(wrapperRef.current).selectAll("*").remove();
     };
-  }, [minDate, maxDate, selectOrder, timelineRef, data]);
+  }, [minDate, maxDate, selectOrder, timelineRef, update]);
 
   return (
     <div className="container">
       <div className="wrapper">
-        {data.length === 0 && (
+        {update.length === 0 && (
           <div className="gorilla">
             <img src={Gorilla} alt="" width={120} height={120} />
           </div>
@@ -204,13 +215,13 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         <div
           ref={timelineRef}
           style={{
-            width: `${data.length * fieldWidth}px`,
+            width: `${update.length * fieldWidth}px`,
             height: `${getDuration(maxDate - minDate)}px`,
             transform: `translateX(${position}px)`,
           }}
         ></div>
 
-        {data.map((element, index) => (
+        {update.map((element, index) => (
           <div
             key={index}
             className="text"
