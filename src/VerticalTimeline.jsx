@@ -165,7 +165,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
               const nextDate = parseDate(element.operations[i + 1].startTime);
               return y(nextDate) - y(parseDate(d.endTime)) > 0
                 ? y(nextDate) - y(parseDate(d.endTime))
-                : 1;
+                : 0;
             }
             return y(maxDate) - y(parseDate(d.endTime));
           })
