@@ -6,8 +6,8 @@
 }
 #root,
 body {
-  width: 70vw;
-  height: calc(100vw - 200px);
+  width: calc(100vw - 200px);
+  height: 85vh;
   overflow: hidden;
   background-color: red;
 }
