@@ -4,7 +4,6 @@ import moment from 'moment';
 const Timeline = ({ minDate, maxDate }) => {
   const svgRef = useRef(null);
 
-
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
   let hours = Math.round(minutes / 60);
@@ -12,9 +11,7 @@ function getDuration(milli) {
   return days * 400;
 }
 const days = moment(maxDate).diff(minDate, 'days')
-console.log(moment(maxDate).diff(minDate, 'hours'))
-const proportion = 1 - Math.abs((days * 10 ) / ((days + 1)* 24 - 10) );
-console.log(proportion)
+const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
   useEffect(() => {
     const dateArray = [];
     const currentDate = new Date(minDate);
