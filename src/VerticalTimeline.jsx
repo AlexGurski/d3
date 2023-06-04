@@ -98,34 +98,33 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
 
       const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
 
-            // Добавление серых блоков для заполнения разницы
-            update.forEach((element, index) => {
-              const greyBars = svg
-                .selectAll(".grey-bar" + index)
-                .data(() => element.operations)
-                .enter()
-                .append("g")
-                .attr("class", "grey-bar" + index);
-      
-              greyBars
-                .append("rect")
-                .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
-                .attr("y", 0)
-                .attr("width", 1)
-                .attr("height", height)
-                .attr("fill", "#C7C7C7")
-                .attr("z-index", 1);
-      
-              greyBars
-                .append("rect")
-                .attr("x", index * fieldWidth + 35)
-                .attr("y", 0)
-                .attr("width", fieldWidth - 70)
-                .attr("height", height)
-                .on("click", () => setOperation(false))
-                .attr("fill", "#CCCCCC")
-             
-            });
+      // Добавление серых блоков для заполнения разницы
+      update.forEach((element, index) => {
+        const greyBars = svg
+          .selectAll(".grey-bar" + index)
+          .data(() => element.operations)
+          .enter()
+          .append("g")
+          .attr("class", "grey-bar" + index);
+
+        greyBars
+          .append("rect")
+          .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
+          .attr("y", 0)
+          .attr("width", 1)
+          .attr("height", height)
+          .attr("fill", "#C7C7C7")
+          .attr("z-index", 1);
+
+        greyBars
+          .append("rect")
+          .attr("x", index * fieldWidth + 35)
+          .attr("y", 0)
+          .attr("width", fieldWidth - 70)
+          .attr("height", height)
+          .on("click", () => setOperation(false))
+          .attr("fill", "#CCCCCC");
+      });
 
       update.forEach((element, index) => {
         const bars = svg
