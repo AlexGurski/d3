@@ -61,7 +61,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
   };
 
   const clickHandler = (e, event) => {
-    console.log(e);
+
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -77,6 +77,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setOperation({
           data: data,
           x: event.pageX,

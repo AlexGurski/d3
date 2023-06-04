@@ -169,3 +169,15 @@ body {
 
   color: #666666;
 }
+
+.respTime{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 150%;
+display: flex;
+align-items: center;
+letter-spacing: 0.1px;
+color: #666666;
+}

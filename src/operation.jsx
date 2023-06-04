@@ -1,5 +1,6 @@
 import "./style.css";
-export const Operation = ({operation, x, y}) => {
+import moment from "moment";
+export const Operation = ({ operation, x, y }) => {
   return (
     <div className="operation" style={{ top: y, left: x }}>
       <span className="name">{operation.operationName}</span>
@@ -9,6 +10,9 @@ export const Operation = ({operation, x, y}) => {
           : "no video"}
       </span>
       <span className="name">{`${operation.firstName} ${operation.lastName}`}</span>
+      <span className="respTime">{`${moment(operation.startTime).format(
+        "HH:MM:ss"
+      )} - ${moment(operation.endTime).format("HH:MM:ss")}`}</span>
     </div>
   );
 };
