@@ -133,10 +133,9 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             "transform",
             (d, i) => {
               const diff = moment(d.startTime).diff(minDate, 'days');
-              const newDate =  moment(d.startTime).subtract(10 * diff, 'hours').format('YYYY-MM-DD HH:mm:ss.SSSSSS')
-              return `translate(0, ${y(parseDate(d.startTime))})`}
+              const newDate =  moment(d.startTime).subtract(9 * diff, 'hours').format('YYYY-MM-DD HH:mm:ss.SSSSSS')
+              return `translate(0, ${y(parseDate(newDate))})`}
           )
-
           .on("mouseover", function () {
             d3.select(this).select("rect").attr("opacity", 1);
           })
