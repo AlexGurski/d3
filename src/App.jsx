@@ -37,8 +37,8 @@ export const App = () => {
       />
       <VerticalTimeline
         data={data}
-        minDate={new Date(`${startDate}T00:00:00.000Z`)}
-        maxDate={new Date(`${endDate}T23:59:59.000Z`)}
+        minDate={new Date(`${startDate}T03:00:00.000Z`)}
+        maxDate={new Date(`${endDate}T15:00:00.000Z`)}
         selectOrder={selectOrder}
       />
     </div>

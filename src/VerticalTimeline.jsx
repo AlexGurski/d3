@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import Gorilla from "./assets/gif/gorila.gif";
 import Arrow from "./assets/svg/arrow.svg";
 import { Operation } from "./operation";
+import Timeline from "./2scale";
 
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
@@ -37,10 +38,14 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   const fieldWidth = 150;
 
   const positionHandler = (e) => {
+    console.log(position)
+    console.log(data.length)
     if (position + e > 0) {
       setPosition(0);
-    } else {
-      setPosition(position + e);
+    } else{
+      if (-(position + e) < data.length) {
+        setPosition(position + e);
+        }
     }
   };
 
@@ -80,14 +85,6 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
         .select(timelineRef.current)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-      const svgTime = d3
-        .select(wrapperRef.current)
-        .append("svg")
-        .attr("width", 100)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -163,20 +160,9 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6))
           .attr("z-index", 2);
       });
-
-      const timeFormat = d3.timeFormat("%d.%m, %H:%M");
-
-      const yAxis = d3
-        .axisRight(y)
-        .ticks(d3.timeHour.every(2))
-        .tickFormat(timeFormat);
-
-      svgTime.append("g").attr("class", "y-axis").call(yAxis);
-      d3.select(wrapperRef.current).call(yAxis);
     }
     return () => {
       d3.select(timelineRef.current).selectAll("*").remove();
-      d3.select(wrapperRef.current).selectAll("*").remove();
     };
   }, [minDate, maxDate, selectOrder, timelineRef, update]);
 
@@ -194,7 +180,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           width={20}
           height={20}
           className="prev"
-          onClick={() => positionHandler(fieldWidth)}
+          onClick={() => positionHandler(1)}
         />
         <img
           src={Arrow}
@@ -202,14 +188,14 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           width={20}
           height={20}
           className="next"
-          onClick={() => positionHandler(-fieldWidth)}
+          onClick={() => positionHandler(-1)}
         />
         <div
           ref={timelineRef}
           style={{
             width: `${update.length * fieldWidth}px`,
             height: `${getDuration(maxDate - minDate)}px`,
-            transform: `translateX(${position}px)`,
+            transform: `translateX(${position * fieldWidth}px)`,
           }}
         ></div>
 
@@ -222,14 +208,16 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
               top: "10px",
               left: `${fieldWidth * index + 30}px`,
               width: `${fieldWidth - 60}px`,
-              transform: `translateX(${position}px)`,
+              transform: `translateX(${position * fieldWidth}px)`,
             }}
           >
             {element.operationName}
           </div>
         ))}
       </div>
-      <div className="datetime" ref={wrapperRef}></div>
+      <div className="datetime" >
+        <Timeline minDate={minDate} maxDate ={maxDate}/>
+      </div>
       {operation && (
         <Operation
           operation={operation.data}

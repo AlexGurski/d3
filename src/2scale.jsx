@@ -2,9 +2,16 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import moment from "moment";
 
-const VerticalTimeline = ({ minDate, maxDate }) => {
-  const dateCount = moment(maxDate).diff(moment(minDate), "days") + 1;
+const Timeline = ({ minDate, maxDate }) => {
   const svgRef = useRef(null);
+
+
+function getDuration(milli) {
+  let minutes = Math.floor(milli / 60000);
+  let hours = Math.round(minutes / 60);
+  let days = Math.round(hours / 24);
+  return days * 400;
+}
 
   useEffect(() => {
     const dateArray = [];
@@ -18,8 +25,8 @@ const VerticalTimeline = ({ minDate, maxDate }) => {
     console.log(dateArray)
     // Определение размеров графика
     const margin = { top: 40, right: 20, bottom: 40, left: 60 };
-    const width = 400 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const width = 100 - margin.left - margin.right;
+    const height = getDuration(maxDate - minDate);
 
     // Создание шкалы времени для оси Y - первый диапазон
     const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
@@ -29,7 +36,7 @@ const VerticalTimeline = ({ minDate, maxDate }) => {
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("transform", `translate(5,${margin.top})`);
 
     for (let i = 0; i < dateArray.length; i++) {
       const yScale1 = d3
@@ -69,4 +76,4 @@ const VerticalTimeline = ({ minDate, maxDate }) => {
   return <svg ref={svgRef}></svg>;
 };
 
-export default VerticalTimeline;
+export default Timeline;
