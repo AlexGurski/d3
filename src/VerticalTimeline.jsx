@@ -149,8 +149,6 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
 
       });
 
-
-
       update.forEach((element, index) => {
         const bars = svg
           .selectAll(".timeline-bar" + index)

@@ -46,7 +46,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
       // Создание оси Y для первого диапазона
       const yAxis1 = d3
         .axisRight(yScale1)
-        .ticks(d3.timeHour.every(1))
+        .ticks(d3.timeHour.every(2))
         .tickFormat(d3.timeFormat("%d.%m, %H:%M"));
 
       // Добавление первой оси к графику
@@ -67,7 +67,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
       .attr("text-anchor", "end")
       .attr("alignment-baseline", "middle")
       .text((d) => d.label);
-  }, []);
+  }, [maxDate, minDate, proportion]);
 
   return <svg ref={svgRef}></svg>;
 };
