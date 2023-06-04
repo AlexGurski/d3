@@ -11,8 +11,8 @@ export const Operation = ({ operation, x, y }) => {
       </span>
       <span className="name">{`${operation.firstName} ${operation.lastName}`}</span>
       <span className="respTime">{`${moment(operation.startTime).format(
-        "HH:MM:ss"
-      )} - ${moment(operation.endTime).format("HH:MM:ss")}`}</span>
+        "HH:mm:ss"
+      )} - ${moment(operation.endTime).format("HH:mm:ss")}`}</span>
     </div>
   );
 };

@@ -59,6 +59,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   const clickHandler = (e, event) => {
+    console.log(e)
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -249,8 +250,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             }}
             title={element.operationName} // Добавляем атрибут title с текстом подсказки
           >
-          {element.operationName.slice(0, 10)}
-          
+            {element.operationName.slice(0, 10)}
           </div>
         ))}
       </div>
