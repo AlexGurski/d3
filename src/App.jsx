@@ -6,7 +6,7 @@ export const App = () => {
   const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
   const startDate = '2023-05-27'
-  const endDate = '2023-05-30'
+  const endDate = '2023-05-29'
   useEffect(() => {
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",

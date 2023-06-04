@@ -98,6 +98,35 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
 
       const y = d3.scaleTime().domain([minDate, maxDate]).range([0, height]);
 
+            // Добавление серых блоков для заполнения разницы
+            update.forEach((element, index) => {
+              const greyBars = svg
+                .selectAll(".grey-bar" + index)
+                .data(() => element.operations)
+                .enter()
+                .append("g")
+                .attr("class", "grey-bar" + index);
+      
+              greyBars
+                .append("rect")
+                .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
+                .attr("y", 0)
+                .attr("width", 1)
+                .attr("height", height)
+                .attr("fill", "#C7C7C7")
+                .attr("z-index", 1);
+      
+              greyBars
+                .append("rect")
+                .attr("x", index * fieldWidth + 35)
+                .attr("y", 0)
+                .attr("width", fieldWidth - 70)
+                .attr("height", height)
+                .on("click", () => setOperation(false))
+                .attr("fill", "#CCCCCC")
+             
+            });
+
       update.forEach((element, index) => {
         const bars = svg
           .selectAll(".timeline-bar" + index)
@@ -132,49 +161,8 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
           )
           .attr("fill", "#87BC45")
-          .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6));
-      });
-
-      // Добавление серых блоков для заполнения разницы
-      update.forEach((element, index) => {
-        const greyBars = svg
-          .selectAll(".grey-bar" + index)
-          .data(() => element.operations)
-          .enter()
-          .append("g")
-          .attr("class", "grey-bar" + index);
-
-        greyBars
-          .append("rect")
-          .attr("x", index * fieldWidth - 1) // Ширина границы: 1px
-          .attr("y", 0)
-          .attr("width", 1)
-          .attr("height", height)
-          .attr("fill", "#C7C7C7");
-
-        greyBars
-          .append("rect")
-          .attr("x", index * fieldWidth + 35)
-          .attr("y", 0)
-          .attr("width", fieldWidth - 70)
-          .attr(
-            "transform",
-            (d, i) => `translate(0, ${i === 0 ? "0" : y(parseDate(d.endTime))})`
-          )
-          .attr("height", (d, i) => {
-            if (i === 0) {
-              return y(parseDate(d.startTime)) - y(minDate);
-            }
-            if (i < element.operations.length - 1) {
-              const nextDate = parseDate(element.operations[i + 1].startTime);
-              return y(nextDate) - y(parseDate(d.endTime)) > 0
-                ? y(nextDate) - y(parseDate(d.endTime))
-                : 0;
-            }
-            return y(maxDate) - y(parseDate(d.endTime));
-          })
-          .on("click", () => setOperation(false))
-          .attr("fill", "#CCCCCC");
+          .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6))
+          .attr("z-index", 2);
       });
 
       const timeFormat = d3.timeFormat("%d.%m, %H:%M");
