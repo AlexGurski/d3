@@ -2,30 +2,30 @@ import { useEffect, useState } from "react";
 // import VerticalTimeline from "./2scale";
 import VerticalTimeline from "./VerticalTimeline";
 import { OrdersList } from "./ordersList";
-
+import { data } from "./data";
 export const App = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
   const startDate = "2023-05-26";
   const endDate = "2023-05-28";
-  useEffect(() => {
-    fetch("https://5scontrol.pl/proxy_to_ngrok/", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: `https://0bc5-81-7-77-205.ngrok-free.app/api/new-order/operations/?from=${startDate}&to=${endDate}`,
-        method: "GET",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setData(data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://5scontrol.pl/proxy_to_ngrok/", {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       url: `https://0bc5-81-7-77-205.ngrok-free.app/api/new-order/operations/?from=${startDate}&to=${endDate}`,
+  //       method: "GET",
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setData(data);
+  //     });
+  // }, []);
 
   return (
     <div className="fullScreen">
@@ -38,7 +38,7 @@ export const App = () => {
       <VerticalTimeline
         data={data}
         minDate={new Date(`${startDate}T03:00:00.000Z`)}
-        maxDate={new Date(`${endDate}T15:00:00.000Z`)}
+        maxDate={new Date(`${endDate}T17:00:00.000Z`)}
         selectOrder={selectOrder}
       />
     </div>

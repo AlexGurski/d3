@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import moment from "moment";
-
+import moment from 'moment';
 const Timeline = ({ minDate, maxDate }) => {
   const svgRef = useRef(null);
 
@@ -12,29 +11,29 @@ function getDuration(milli) {
   let days = Math.round(hours / 24);
   return days * 400;
 }
-
+const days = moment(maxDate).diff(minDate, 'days')
+console.log(moment(maxDate).diff(minDate, 'hours'))
+const proportion = 1 - Math.abs((days * 10 ) / ((days + 1)* 24 - 10) );
+console.log(proportion)
   useEffect(() => {
     const dateArray = [];
-
     const currentDate = new Date(minDate);
 
     while (currentDate <= maxDate) {
       dateArray.push(currentDate.toISOString().split("T")[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    console.log(dateArray)
     // Определение размеров графика
-    const margin = { top: 40, right: 20, bottom: 40, left: 60 };
+    const margin = { top: 40, right: 20, bottom: 0, left: 60 };
     const width = 100 - margin.left - margin.right;
-    const height = getDuration(maxDate - minDate);
-
+    const height = getDuration(maxDate - minDate) 
     // Создание шкалы времени для оси Y - первый диапазон
     const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
 
     const svg = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", height)
       .append("g")
       .attr("transform", `translate(5,${margin.top})`);
 
@@ -43,21 +42,21 @@ function getDuration(milli) {
         .scaleTime()
         .domain([
           parseTime(`${dateArray[i]}T06:00:00`),
-          parseTime(`${dateArray[i]}T18:00:00`),
+          parseTime(`${dateArray[i]}T20:00:00`),
         ])
-        .range([0, height / dateArray.length]);
+        .range([0, height * proportion / (dateArray.length)]);
 
       // Создание оси Y для первого диапазона
       const yAxis1 = d3
         .axisRight(yScale1)
-        .ticks(d3.timeHour.every(2))
+        .ticks(d3.timeHour.every(1))
         .tickFormat(d3.timeFormat("%d.%m, %H:%M"));
 
       // Добавление первой оси к графику
       svg
         .append("g")
         .attr("class", "y-axis")
-        .attr("transform", `translate(0, ${i * (height / dateArray.length + 15)})`)
+        .attr("transform", `translate(0, ${i * (height * proportion / (dateArray.length)) + i * 20})`)
         .call(yAxis1);
     }
     // Добавление меток дней

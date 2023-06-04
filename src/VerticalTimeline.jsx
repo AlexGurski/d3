@@ -4,6 +4,7 @@ import Gorilla from "./assets/gif/gorila.gif";
 import Arrow from "./assets/svg/arrow.svg";
 import { Operation } from "./operation";
 import Timeline from "./2scale";
+import moment from 'moment'
 
 function getDuration(milli) {
   let minutes = Math.floor(milli / 60000);
@@ -32,14 +33,12 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   }, [data, selectOrder]);
 
   const timelineRef = useRef(null);
-  const wrapperRef = useRef(null);
   const [position, setPosition] = useState(0);
   const [operation, setOperation] = useState(false);
   const fieldWidth = 150;
 
   const positionHandler = (e) => {
-    console.log(position)
-    console.log(data.length)
+
     if (position + e > 0) {
       setPosition(0);
     } else{
@@ -50,6 +49,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   const clickHandler = (e, event) => {
+    console.log(e)
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -70,22 +70,21 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           x: event.pageX,
           y: event.pageY,
         });
+        
       });
-    console.log(e, event);
   };
-
+  console.log(getDuration(maxDate - minDate))
   useEffect(() => {
     if (timelineRef.current && update.length > 0) {
       const margin = { top: 40, right: 0, bottom: 0, left: 0 };
-      const height =
-        timelineRef.current.clientHeight - margin.top - margin.bottom;
+      const height = getDuration(maxDate - minDate);
       const width = update.length * fieldWidth;
 
       const svg = d3
         .select(timelineRef.current)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -132,9 +131,13 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           .attr("class", "timeline-bar" + index)
           .attr(
             "transform",
-            (d, i) => `translate(0, ${y(parseDate(d.startTime))})`
+            (d, i) => {
+              const diff = moment(d.startTime).diff(minDate, 'days');
+              const newDate =  moment(d.startTime).subtract(10 * diff, 'hours').format('YYYY-MM-DD HH:mm:ss.SSSSSS')
+              return `translate(0, ${y(parseDate(d.startTime))})`}
           )
-          .on("mouseover", function (event, d) {
+
+          .on("mouseover", function () {
             d3.select(this).select("rect").attr("opacity", 1);
           })
           .on("click", function (event, d) {
@@ -154,7 +157,9 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           .attr("width", fieldWidth - 70)
           .attr(
             "height",
-            (d, i) => y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
+            (d, i) => {
+              return y(parseDate(d.endTime, d)) - y(parseDate(d.startTime, d))
+            }
           )
           .attr("fill", "#87BC45")
           .attr("opacity", (d, i) => (d.orderName === selectOrder ? 1 : 0.6))
