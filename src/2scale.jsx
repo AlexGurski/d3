@@ -23,14 +23,14 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
     // Определение размеров графика
     const margin = { top: 40, right: 20, bottom: 0, left: 60 };
     const width = 100 - margin.left - margin.right;
-    const height = getDuration(maxDate - minDate) 
+    const height = getDuration(maxDate - minDate)  * proportion
     // Создание шкалы времени для оси Y - первый диапазон
     const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
 
     const svg = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height)
+      .attr("height", height  + (((days + 1) * 30)))
       .append("g")
       .attr("transform", `translate(5,${margin.top})`);
 
@@ -41,7 +41,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
           parseTime(`${dateArray[i]}T06:00:00`),
           parseTime(`${dateArray[i]}T20:00:00`),
         ])
-        .range([0, height * proportion / (dateArray.length)]);
+        .range([0, height / (dateArray.length)]);
 
       // Создание оси Y для первого диапазона
       const yAxis1 = d3
@@ -53,7 +53,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
       svg
         .append("g")
         .attr("class", "y-axis")
-        .attr("transform", `translate(0, ${i * (height * proportion / (dateArray.length)) + i * 20})`)
+        .attr("transform", `translate(0, ${i * (height / (dateArray.length)) + i * 18})`)
         .call(yAxis1);
     }
     // Добавление меток дней

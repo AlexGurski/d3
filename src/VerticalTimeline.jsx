@@ -95,7 +95,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         .select(timelineRef.current)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height)
+        .attr("height", height + (days * 20))
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -140,7 +140,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
             .attr("width", fieldWidth - 70)
             .attr("height", 20)
             .on("click", () => setOperation(false))
-            .attr("fill", "#212121")
+            .attr("fill", "#7d7f7d")
             .attr("transform", (d, i) => {
               console.log(i)
               return `translate(0, ${(ind + 1) * (400 * proportion) + ind * 20} )`;
@@ -221,8 +221,8 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         <div
           ref={timelineRef}
           style={{
-            width: `${update.length * fieldWidth}px`,
-            height: `${getDuration(maxDate - minDate)}px`,
+            width: `${(update.length * fieldWidth)}px`,
+            height: `${getDuration(maxDate - minDate) * proportion + (days * 40)}px`,
             transform: `translateX(${position * fieldWidth}px)`,
           }}
         ></div>
