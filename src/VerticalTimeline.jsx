@@ -13,11 +13,9 @@ function getDuration(milli) {
   return days * 400;
 }
 
-
 const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
-
-  const days = moment(maxDate).diff(minDate, 'days')
-const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
+  const days = moment(maxDate).diff(minDate, "days");
+  const proportion = 1 - Math.abs((days * 10) / ((days + 1) * 24 - 10));
 
   const dateArray = [];
   const currentDate = new Date(minDate);
@@ -61,7 +59,6 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
   };
 
   const clickHandler = (e, event) => {
-
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -85,7 +82,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         });
       });
   };
-  
+
   useEffect(() => {
     if (timelineRef.current && update.length > 0) {
       const margin = { top: 40, right: 0, bottom: 0, left: 0 };
@@ -96,7 +93,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         .select(timelineRef.current)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + (days * 20))
+        .attr("height", height + days * 20)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -133,8 +130,8 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
           .on("click", () => setOperation(false))
           .attr("fill", "#CCCCCC");
 
-          dateArray.forEach((date, ind) => {
-            greyBars
+        dateArray.forEach((date, ind) => {
+          greyBars
             .append("rect")
             .attr("x", index * fieldWidth + 35)
             .attr("y", 0)
@@ -143,11 +140,12 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
             .on("click", () => setOperation(false))
             .attr("fill", "#7d7f7d")
             .attr("transform", (d, i) => {
-              console.log(i)
-              return `translate(0, ${(ind + 1) * (400 * proportion) + ind * 20} )`;
-            })
-          })
-
+              console.log(i);
+              return `translate(0, ${
+                (ind + 1) * (400 * proportion) + ind * 20
+              } )`;
+            });
+        });
       });
 
       update.forEach((element, index) => {
@@ -193,7 +191,15 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
     return () => {
       d3.select(timelineRef.current).selectAll("*").remove();
     };
-  }, [minDate, maxDate, selectOrder, timelineRef, update, dateArray, proportion]);
+  }, [
+    minDate,
+    maxDate,
+    selectOrder,
+    timelineRef,
+    update,
+    dateArray,
+    proportion,
+  ]);
 
   return (
     <div className="container">
@@ -222,8 +228,10 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         <div
           ref={timelineRef}
           style={{
-            width: `${(update.length * fieldWidth)}px`,
-            height: `${getDuration(maxDate - minDate) * proportion + (days * 40)}px`,
+            width: `${update.length * fieldWidth}px`,
+            height: `${
+              getDuration(maxDate - minDate) * proportion + days * 40
+            }px`,
             transform: `translateX(${position * fieldWidth}px)`,
           }}
         ></div>
@@ -231,7 +239,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
         {update.map((element, index) => (
           <div
             key={index}
-            className="text"
+            className="text tooltip"
             style={{
               position: "absolute",
               top: "10px",
@@ -239,8 +247,10 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
               width: `${fieldWidth - 60}px`,
               transform: `translateX(${position * fieldWidth}px)`,
             }}
+            title={element.operationName} // Добавляем атрибут title с текстом подсказки
           >
-            {element.operationName}
+          {element.operationName.slice(0, 10)}
+          
           </div>
         ))}
       </div>

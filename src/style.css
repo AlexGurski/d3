@@ -38,17 +38,40 @@ body {
   text-align: center;
   font-size: 10px;
   white-space: nowrap; /* Отменяем перенос текста */
-  overflow: hidden;
   font-family: "Inter";
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
-  /* identical to box height, or 150% */
-
   letter-spacing: 0.15px;
   padding: 0 5px;
   color: #444343;
+
+}
+.tooltip {
+  position: relative;
+}
+
+.tooltip::before {
+  content: attr(title);
+  position: absolute;
+  top: 20px;
+  left: 0;
+  font-weight: 300;
+font-size: 15px;
+  background: rgba(0, 0, 0, 0.856);
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 1px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  border-radius: 6px;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
 }
 
 .orders {
@@ -142,14 +165,9 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  /* identical to box height, or 171% */
-
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-
-  /* product/akcent/akcent */
-
   color: #fe6100;
 }
 
@@ -159,25 +177,20 @@ body {
   font-weight: 400;
   font-size: 12px;
   line-height: 150%;
-  /* identical to box height, or 18px */
-
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-
-  /* Surface/On surface/Medium emphasis */
-
   color: #666666;
 }
 
 .respTime{
   font-family: 'Inter';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 150%;
-display: flex;
-align-items: center;
-letter-spacing: 0.1px;
-color: #666666;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.1px;
+  color: #666666;
 }
