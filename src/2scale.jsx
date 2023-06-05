@@ -21,7 +21,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
       currentDate.setDate(currentDate.getDate() + 1);
     }
     // Определение размеров графика
-    const margin = { top: 40, right: 20, bottom: 0, left: 60 };
+    const margin = { top: 10, right: 20, bottom: 0, left: 60 };
     const width = 100 - margin.left - margin.right;
     const height = getDuration(maxDate - minDate)  * proportion
     // Создание шкалы времени для оси Y - первый диапазон

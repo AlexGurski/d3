@@ -59,7 +59,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   };
 
   const clickHandler = (e, event) => {
-    console.log(e)
+    console.log(e);
     fetch("https://5scontrol.pl/proxy_to_ngrok/", {
       method: "POST",
       headers: {
@@ -86,7 +86,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
 
   useEffect(() => {
     if (timelineRef.current && update.length > 0) {
-      const margin = { top: 40, right: 0, bottom: 0, left: 0 };
+      const margin = { top: 10, right: 0, bottom: 0, left: 0 };
       const height = getDuration(maxDate - minDate);
       const width = update.length * fieldWidth;
 
@@ -137,7 +137,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             .attr("x", index * fieldWidth + 35)
             .attr("y", 0)
             .attr("width", fieldWidth - 70)
-            .attr("height", 20)
+            .attr("height", 19)
             .on("click", () => setOperation(false))
             .attr("fill", "#7d7f7d")
             .attr("transform", (d, i) => {
@@ -200,43 +200,12 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
     update,
     dateArray,
     proportion,
+    days,
   ]);
 
   return (
     <div className="container">
-      <div className="wrapper">
-        {update.length === 0 && (
-          <div className="gorilla">
-            <img src={Gorilla} alt="" width={120} height={120} />
-          </div>
-        )}
-        <img
-          src={Arrow}
-          alt=""
-          width={20}
-          height={20}
-          className="prev"
-          onClick={() => positionHandler(1)}
-        />
-        <img
-          src={Arrow}
-          alt=""
-          width={20}
-          height={20}
-          className="next"
-          onClick={() => positionHandler(-1)}
-        />
-        <div
-          ref={timelineRef}
-          style={{
-            width: `${update.length * fieldWidth}px`,
-            height: `${
-              getDuration(maxDate - minDate) * proportion + ((days + 1) * 20)
-            }px`,
-            transform: `translateX(${position * fieldWidth}px)`,
-          }}
-        ></div>
-
+      <div className="header">
         {update.map((element, index) => (
           <div
             key={index}
@@ -248,14 +217,54 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
               width: `${fieldWidth - 60}px`,
               transform: `translateX(${position * fieldWidth}px)`,
             }}
-            title={element.operationName} // Добавляем атрибут title с текстом подсказки
+            title={element.operationName}
           >
             {element.operationName.slice(0, 10)}
           </div>
         ))}
+        <div className="prev">
+          <img
+            src={Arrow}
+            alt=""
+            width={20}
+            height={20}
+            className="arrow"
+            onClick={() => positionHandler(1)}
+          />
+        </div>
+        <div className="next">
+          <img
+            src={Arrow}
+            alt=""
+            width={20}
+            height={20}
+            className="arrow"
+            onClick={() => positionHandler(-1)}
+          />
+        </div>
       </div>
-      <div className="datetime">
-        <Timeline minDate={minDate} maxDate={maxDate} />
+      <div className="timelineWrapper">
+        <div className="wrapper">
+          {update.length === 0 && (
+            <div className="gorilla">
+              <img src={Gorilla} alt="" width={120} height={120} />
+            </div>
+          )}
+
+          <div
+            ref={timelineRef}
+            style={{
+              width: `${update.length * fieldWidth}px`,
+              height: `${
+                getDuration(maxDate - minDate) * proportion + (days + 1) * 20
+              }px`,
+              transform: `translateX(${position * fieldWidth}px)`,
+            }}
+          ></div>
+        </div>
+        <div className="datetime">
+          <Timeline minDate={minDate} maxDate={maxDate} />
+        </div>
       </div>
       {operation && (
         <Operation
