@@ -23,7 +23,8 @@ body {
   width: calc(100% - 260px);
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .timelineWrapper {
   height: 100%;
