@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import moment from 'moment';
+
 const Timeline = ({ minDate, maxDate }) => {
   const svgRef = useRef(null);
 
@@ -67,6 +68,9 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
       .attr("text-anchor", "end")
       .attr("alignment-baseline", "middle")
       .text((d) => d.label);
+      return () => {
+        d3.select(svgRef.current).selectAll("*").remove();
+      };
   }, [maxDate, minDate, proportion]);
 
   return <svg ref={svgRef}></svg>;
