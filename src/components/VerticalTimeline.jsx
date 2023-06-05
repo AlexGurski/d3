@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import Gorilla from "./assets/gif/gorila.gif";
-import Arrow from "./assets/svg/arrow.svg";
+import Gorilla from "../assets/gif/gorila.gif";
+import Arrow from "../assets/svg/arrow.svg";
 import { Operation } from "./operation";
-import Timeline from "./2scale";
+import Timeline from "./scale";
 import moment from "moment";
 
 function getDuration(milli) {

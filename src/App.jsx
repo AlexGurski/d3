@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import VerticalTimeline from "./VerticalTimeline";
-import { OrdersList } from "./ordersList";
-import { data } from "./data";
+import VerticalTimeline from "./components/VerticalTimeline";
+import { OrdersList } from "./components/ordersList";
+import { data } from "./base/data";
 export const TimelineComponent = () => {
   // const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
