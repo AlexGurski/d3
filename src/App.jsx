@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import VerticalTimeline from "./VerticalTimeline";
 import { OrdersList } from "./ordersList";
 import { data } from "./data";
-export const App = () => {
+export const TimelineComponent = () => {
   // const [data, setData] = useState([]);
   const [selectOrder, setSelectOrder] = useState("");
   const startDate = "2023-05-26";
@@ -44,4 +44,4 @@ export const App = () => {
   );
 };
 
-export default App;
+export default TimelineComponent;

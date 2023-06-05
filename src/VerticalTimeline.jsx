@@ -16,7 +16,6 @@ function getDuration(milli) {
 const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
   const days = moment(maxDate).diff(minDate, "days");
   const proportion = 1 - Math.abs((days * 10) / ((days + 1) * 24 - 10));
-
   const dateArray = [];
   const currentDate = new Date(minDate);
 
