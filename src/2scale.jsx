@@ -30,7 +30,7 @@ const proportion = 1 - Math.abs((days * 10 ) / ((days + 1) * 24 - 10));
     const svg = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height  + (((days + 1) * 30)))
+      .attr("height", height  + (((days ) * 20)))
       .append("g")
       .attr("transform", `translate(5,${margin.top})`);
 
