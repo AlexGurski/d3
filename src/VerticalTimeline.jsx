@@ -143,7 +143,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             .attr("transform", (d, i) => {
               console.log(i);
               return `translate(0, ${
-                (ind + 1) * (400 * proportion) + ind * 20
+                (ind + 1) * (400 * proportion) + ind * 18
               } )`;
             });
         });
@@ -231,7 +231,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
           style={{
             width: `${update.length * fieldWidth}px`,
             height: `${
-              getDuration(maxDate - minDate) * proportion + days * 40
+              getDuration(maxDate - minDate) * proportion + ((days + 1) * 20)
             }px`,
             transform: `translateX(${position * fieldWidth}px)`,
           }}
