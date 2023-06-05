@@ -139,7 +139,7 @@ const VerticalTimeline = ({ data, minDate, maxDate, selectOrder }) => {
             .attr("width", fieldWidth - 70)
             .attr("height", 19)
             .on("click", () => setOperation(false))
-            .attr("fill", "#7d7f7d")
+            .attr("fill", "#ededed")
             .attr("transform", (d, i) => {
               console.log(i);
               return `translate(0, ${
